@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html ng-app="todoApp">
+<head>
+    <title>TaskMaster Hub | Modern ToDo</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; display: flex; justify-content: center; padding: 50px; }
+        .container { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 400px; }
+        h2 { color: #2c3e50; text-align: center; }
+        .input-group { display: flex; margin-bottom: 20px; }
+        input[type="text"] { flex-grow: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px 0 0 4px; outline: none; }
+        .add-btn { padding: 10px 20px; border: none; background: #3498db; color: white; border-radius: 0 4px 4px 0; cursor: pointer; }
+        .filters { margin-bottom: 15px; display: flex; justify-content: space-around; }
+        .filters button { background: none; border: none; cursor: pointer; color: #7f8c8d; font-weight: bold; }
+        .filters button.active { color: #3498db; border-bottom: 2px solid #3498db; }
+        ul { list-style: none; padding: 0; }
+        li { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .completed { text-decoration: line-through; color: #bdc3c7; }
+        .task-text { flex-grow: 1; margin-left: 10px; cursor: pointer; }
+        .delete-btn { color: #e74c3c; cursor: pointer; font-size: 0.8rem; border: 1px solid #e74c3c; padding: 2px 5px; border-radius: 3px; }
+        .edit-input { flex-grow: 1; padding: 5px; margin: 0 10px; }
+    </style>
+</head>
+<body ng-controller="TodoController">
+
+<div class="container">
+    <h2>TaskMaster Hub</h2>
+
+    <form ng-submit="addTask()" class="input-group">
+        <input type="text" ng-model="newTask" placeholder="What needs to be done?" required>
+        <button type="submit" class="add-btn">Add</button>
+    </form>
+
+    <div class="filters">
+        <button ng-click="statusFilter = {}" ng-class="{'active': !statusFilter.completed}">All</button>
+        <button ng-click="statusFilter = {completed: false}" ng-class="{'active': statusFilter.completed === false}">Pending</button>
+        <button ng-click="statusFilter = {completed: true}" ng-class="{'active': statusFilter.completed === true}">Completed</button>
+    </div>
+
+    <ul>
+        <li ng-repeat="task in tasks | filter:statusFilter">
+            <input type="checkbox" ng-model="task.completed">
+            
+            <span ng-if="!task.isEditing" 
+                  ng-click="editTask(task)" 
+                  class="task-text" 
+                  ng-class="{'completed': task.completed}">
+                {{ task.title }}
+            </span>
+            
+            <input ng-if="task.isEditing" 
+                   class="edit-input" 
+                   type="text" 
+                   ng-model="task.title" 
+                   ng-blur="saveEdit(task)" 
+                   ng-keyup="$event.keyCode == 13 && saveEdit(task)">
+
+            <span class="delete-btn" ng-click="deleteTask($index)">Delete</span>
+        </li>
+    </ul>
+</div>
+
+<script>
+    var app = angular.module('todoApp', []);
+
+    app.controller('TodoController', function($scope) {
+        $scope.tasks = [
+            { title: 'Setup TaskMaster Hub repo', completed: true, isEditing: false },
+            { title: 'Design Angular components', completed: false, isEditing: false }
+        ];
+
+        // Create
+        $scope.addTask = function() {
+            if ($scope.newTask) {
+                $scope.tasks.push({
+                    title: $scope.newTask,
+                    completed: false,
+                    isEditing: false
+                });
+                $scope.newTask = ''; // Clear input
+            }
+        };
+
+        // Update (Edit mode)
+        $scope.editTask = function(task) {
+            task.isEditing = true;
+        };
+
+        $scope.saveEdit = function(task) {
+            task.isEditing = false;
+        };
+
+        // Delete
+        $scope.deleteTask = function(index) {
+            $scope.tasks.splice(index, 1);
+        };
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>KCET Learning | Quiz</title>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #eef2ff, #f8fafc);
+            min-height: 100vh;
+        }
+        .quiz-card {
+            max-width: 520px;
+            margin: 70px auto;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card quiz-card">
+        <div class="card-body p-4">
+
+            <h4 class="text-center text-primary mb-4">
+                Welcome, <span id="displayName"></span>
+            </h4>
+
+            <div id="quiz-section">
+                <h5 id="question" class="mb-4"></h5>
+                <div id="options" class="list-group mb-4"></div>
+
+                <div class="d-flex justify-content-between">
+                    <button id="prevBtn" class="btn btn-outline-secondary">Previous</button>
+                    <button id="nextBtn" class="btn btn-primary">Next</button>
+                </div>
+            </div>
+
+            <div id="result-section" class="text-center d-none">
+                <h4 class="mb-3">Quiz Completed 🎉</h4>
+                <p id="finalResult" class="fs-5 fw-semibold"></p>
+                <button id="restartBtn" class="btn btn-success">Restart Quiz</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function () {
+
+    const username = localStorage.getItem("username");
+    $("#displayName").text(username);
+
+    const questions = [
+        {
+            question: "Who is the Formula 1 driver known as 'Mad Max'?",
+            options: [
+                "Lewis Hamilton",
+                "Max Verstappen",
+                "Sebastian Vettel"
+            ],
+            answer: 1
+        },
+        {
+            question: "If a Formula 1 car completes 5 laps and each lap is 6 km, what is the total distance covered?",
+            options: [
+                "30 km",
+                "25 km",
+                "20 km"
+            ],
+            answer: 0
+        },
+        {
+            question: "Max Verstappen wins 3 races and earns 25 points each. How many points does he score?",
+            options: [
+                "50",
+                "75",
+                "100"
+            ],
+            answer: 1
+        },
+        {
+            question: "If a car’s speed is 300 km/h, how far will it travel in 2 hours?",
+            options: [
+                "600 km",
+                "300 km",
+                "150 km"
+            ],
+            answer: 0
+        },
+        {
+            question: "A Formula 1 car gains an extra 18 km/h using DRS on a straight. Without DRS, it takes 30 seconds to cover the straight. Assuming constant speed, how many seconds does the car save by using DRS?",
+            options: [
+                "1.5 seconds",
+                "2 seconds",
+                "3 seconds"
+            ],
+            answer: 0
+        }
+
+    ];
+
+    let index = 0;
+    let answers = [];
+
+    function loadQuestion(i) {
+        $("#question").text(questions[i].question);
+        $("#options").empty();
+
+        $.each(questions[i].options, function (j, option) {
+            const checked = answers[i] === j ? "checked" : "";
+            $("#options").append(`
+                <label class="list-group-item">
+                    <input type="radio" class="form-check-input me-2" name="option" value="${j}" ${checked}>
+                    ${option}
+                </label>
+            `);
+        });
+    }
+
+    $("#nextBtn").click(function () {
+        const selected = $("input[name='option']:checked").val();
+        if (selected === undefined) {
+            alert("Please select an answer");
+            return;
+        }
+
+        answers[index] = parseInt(selected);
+
+        if (index < questions.length - 1) {
+            index++;
+            loadQuestion(index);
+        } else {
+            showResult();
+        }
+    });
+
+    $("#prevBtn").click(function () {
+        if (index > 0) {
+            index--;
+            loadQuestion(index);
+        }
+    });
+
+    function showResult() {
+        let score = 0;
+        for (let i = 0; i < questions.length; i++) {
+            if (answers[i] === questions[i].answer) score++;
+        }
+
+        $("#quiz-section").addClass("d-none");
+        $("#result-section").removeClass("d-none");
+
+        $("#finalResult").text(
+            `${username}, you scored ${score} out of ${questions.length}`
+        );
+    }
+
+    $("#restartBtn").click(function () {
+        localStorage.clear();
+        window.location.href = "index.html";
+    });
+
+    loadQuestion(index);
+});
+</script>
+</body>
+</html>

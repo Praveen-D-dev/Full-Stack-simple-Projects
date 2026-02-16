@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>KCET Learning | Start Quiz</title>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #eef2ff, #f8fafc);
+            min-height: 100vh;
+        }
+        .card {
+            max-width: 420px;
+            margin: 120px auto;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card p-4">
+        <h3 class="text-center text-primary mb-3">KCET Learning Quiz</h3>
+
+        <div class="mb-3">
+            <label class="form-label">Enter Your Name</label>
+            <input type="text" id="username" class="form-control" placeholder="Your name">
+        </div>
+
+        <button id="startQuiz" class="btn btn-primary w-100">Start Quiz</button>
+    </div>
+</div>
+
+<script>
+$(document).ready(function () {
+    $("#startQuiz").click(function () {
+        const name = $("#username").val().trim();
+
+        if (name === "") {
+            alert("Please enter your name");
+            return;
+        }
+
+        localStorage.setItem("username", name);
+        window.location.href = "quiz.html";
+    });
+});
+</script>
+</body>
+</html>
