@@ -1,101 +1,247 @@
 <!DOCTYPE html>
 <html ng-app="todoApp">
+
 <head>
-    <title>TaskMaster Hub | Modern ToDo</title>
+    <title>TaskMaster Hub | Enhanced UI</title>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; display: flex; justify-content: center; padding: 50px; }
-        .container { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 400px; }
-        h2 { color: #2c3e50; text-align: center; }
-        .input-group { display: flex; margin-bottom: 20px; }
-        input[type="text"] { flex-grow: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px 0 0 4px; outline: none; }
-        .add-btn { padding: 10px 20px; border: none; background: #3498db; color: white; border-radius: 0 4px 4px 0; cursor: pointer; }
-        .filters { margin-bottom: 15px; display: flex; justify-content: space-around; }
-        .filters button { background: none; border: none; cursor: pointer; color: #7f8c8d; font-weight: bold; }
-        .filters button.active { color: #3498db; border-bottom: 2px solid #3498db; }
-        ul { list-style: none; padding: 0; }
-        li { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
-        .completed { text-decoration: line-through; color: #bdc3c7; }
-        .task-text { flex-grow: 1; margin-left: 10px; cursor: pointer; }
-        .delete-btn { color: #e74c3c; cursor: pointer; font-size: 0.8rem; border: 1px solid #e74c3c; padding: 2px 5px; border-radius: 3px; }
-        .edit-input { flex-grow: 1; padding: 5px; margin: 0 10px; }
+        /* Base Styling - Scaled for visibility */
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #eef2f3;
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+            font-size: 18px;
+            /* Larger base font */
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            width: 500px;
+            /* Wider container */
+        }
+
+        h2 {
+            color: #2c3e50;
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+        }
+
+        /* Form Elements */
+        .input-group {
+            display: flex;
+            margin-bottom: 25px;
+            height: 50px;
+        }
+
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 12px;
+            font-size: 1.1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px 0 0 8px;
+            outline: none;
+        }
+
+        .add-btn {
+            padding: 0 25px;
+            border: none;
+            background: #27ae60;
+            color: white;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        /* Filter Tabs */
+        .filters {
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .filters button {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        .filters button.active {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        /* List Items */
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: transform 0.2s;
+        }
+
+        li:hover {
+            background: #fafafa;
+        }
+
+        .checkbox-custom {
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+        }
+
+        .task-text {
+            flex-grow: 1;
+            margin: 0 15px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            overflow-wrap: anywhere;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: #a0a0a0;
+        }
+
+        /* Action Buttons */
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .edit-btn {
+            background: #f39c12;
+            color: white;
+        }
+
+        .save-btn {
+            background: #3498db;
+            color: white;
+        }
+
+        .del-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .edit-input {
+            flex-grow: 1;
+            padding: 8px;
+            font-size: 1.1rem;
+            margin: 0 10px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+        }
     </style>
 </head>
+
 <body ng-controller="TodoController">
 
-<div class="container">
-    <h2>TaskMaster Hub</h2>
+    <div class="container">
+        <h2>TaskMaster Hub</h2>
 
-    <form ng-submit="addTask()" class="input-group">
-        <input type="text" ng-model="newTask" placeholder="What needs to be done?" required>
-        <button type="submit" class="add-btn">Add</button>
-    </form>
+        <form ng-submit="addTask()" class="input-group">
+            <input type="text" ng-model="newTask" placeholder="Add a new task..." required>
+            <button type="submit" class="add-btn">Add</button>
+        </form>
 
-    <div class="filters">
-        <button ng-click="statusFilter = {}" ng-class="{'active': !statusFilter.completed}">All</button>
-        <button ng-click="statusFilter = {completed: false}" ng-class="{'active': statusFilter.completed === false}">Pending</button>
-        <button ng-click="statusFilter = {completed: true}" ng-class="{'active': statusFilter.completed === true}">Completed</button>
+        <div class="filters">
+            <button ng-click="statusFilter = {}" ng-class="{'active': (statusFilter | json) === '{}'}">
+                All
+            </button>
+
+            <button ng-click="statusFilter = {completed: false}"
+                ng-class="{'active': statusFilter.completed === false}">
+                Pending
+            </button>
+            
+            <button ng-click="statusFilter = {completed: true}" ng-class="{'active': statusFilter.completed === true}">
+                Done
+            </button>
+        </div>
+
+        <ul>
+            <li ng-repeat="task in tasks | filter:statusFilter">
+                <input type="checkbox" class="checkbox-custom" ng-model="task.completed">
+
+                <span ng-if="!task.isEditing" class="task-text" ng-class="{'completed': task.completed}">
+                    {{ task.title }}
+                </span>
+
+                <input ng-if="task.isEditing" class="edit-input" type="text" ng-model="task.title" focus-on-show>
+
+                <div class="actions">
+                    <button ng-if="!task.isEditing" class="btn edit-btn" ng-click="editTask(task)">Edit</button>
+                    <button ng-if="task.isEditing" class="btn save-btn" ng-click="saveEdit(task)">Save</button>
+                    <button class="btn del-btn" ng-click="deleteTask($index)">Delete</button>
+                </div>
+            </li>
+        </ul>
     </div>
 
-    <ul>
-        <li ng-repeat="task in tasks | filter:statusFilter">
-            <input type="checkbox" ng-model="task.completed">
-            
-            <span ng-if="!task.isEditing" 
-                  ng-click="editTask(task)" 
-                  class="task-text" 
-                  ng-class="{'completed': task.completed}">
-                {{ task.title }}
-            </span>
-            
-            <input ng-if="task.isEditing" 
-                   class="edit-input" 
-                   type="text" 
-                   ng-model="task.title" 
-                   ng-blur="saveEdit(task)" 
-                   ng-keyup="$event.keyCode == 13 && saveEdit(task)">
+    <script>
+        var app = angular.module('todoApp', []);
 
-            <span class="delete-btn" ng-click="deleteTask($index)">Delete</span>
-        </li>
-    </ul>
-</div>
+        app.controller('TodoController', function ($scope) {
+            $scope.tasks = [
+                { title: 'Finalize UI Design', completed: false, isEditing: false },
+                { title: 'Update Angular version', completed: true, isEditing: false }
+            ];
 
-<script>
-    var app = angular.module('todoApp', []);
+            $scope.addTask = function () {
+                if ($scope.newTask) {
+                    $scope.tasks.push({ title: $scope.newTask, completed: false, isEditing: false });
+                    $scope.newTask = '';
+                }
+            };
 
-    app.controller('TodoController', function($scope) {
-        $scope.tasks = [
-            { title: 'Setup TaskMaster Hub repo', completed: true, isEditing: false },
-            { title: 'Design Angular components', completed: false, isEditing: false }
-        ];
+            $scope.editTask = function (task) {
+                task.isEditing = true;
+            };
 
-        // Create
-        $scope.addTask = function() {
-            if ($scope.newTask) {
-                $scope.tasks.push({
-                    title: $scope.newTask,
-                    completed: false,
-                    isEditing: false
-                });
-                $scope.newTask = ''; // Clear input
-            }
-        };
+            $scope.saveEdit = function (task) {
+                if (task.title.trim() === "") {
+                    $scope.deleteTask($scope.tasks.indexOf(task));
+                } else {
+                    task.isEditing = false;
+                }
+            };
 
-        // Update (Edit mode)
-        $scope.editTask = function(task) {
-            task.isEditing = true;
-        };
-
-        $scope.saveEdit = function(task) {
-            task.isEditing = false;
-        };
-
-        // Delete
-        $scope.deleteTask = function(index) {
-            $scope.tasks.splice(index, 1);
-        };
-    });
-</script>
+            $scope.deleteTask = function (index) {
+                $scope.tasks.splice(index, 1);
+            };
+        });
+    </script>
 
 </body>
+
 </html>

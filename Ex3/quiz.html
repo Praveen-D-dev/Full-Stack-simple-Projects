@@ -5,16 +5,30 @@
     <title>KCET Learning | Quiz</title>
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <style>
         body {
             background: linear-gradient(135deg, #eef2ff, #f8fafc);
             min-height: 100vh;
+            padding: 60px 15px; /* page spacing */
+            font-size: 20px; /* larger base font */   
         }
+
         .quiz-card {
             max-width: 520px;
-            margin: 70px auto;
+            margin: auto;
+            padding: 15px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.15);
             border-radius: 15px;
+        }
+
+        .list-group-item {
+            margin-bottom: 8px;
+            border-radius: 8px !important;
+        }
+
+        #timer {
+            font-size: 20px;
         }
     </style>
 </head>
@@ -22,26 +36,44 @@
 
 <div class="container">
     <div class="card quiz-card">
-        <div class="card-body p-4">
+        <div class="card-body p-5">
 
-            <h4 class="text-center text-primary mb-4">
+            <h4 class="text-center text-primary mb-3">
                 Welcome, <span id="displayName"></span>
             </h4>
 
-            <div id="quiz-section">
-                <h5 id="question" class="mb-4"></h5>
-                <div id="options" class="list-group mb-4"></div>
-
-                <div class="d-flex justify-content-between">
-                    <button id="prevBtn" class="btn btn-outline-secondary">Previous</button>
-                    <button id="nextBtn" class="btn btn-primary">Next</button>
-                </div>
+            <!-- TIMER -->
+            <div class="text-end mb-4">
+                ⏳ Time Left:
+                <span id="timer" class="fw-bold text-success">60</span> sec
             </div>
 
-            <div id="result-section" class="text-center d-none">
+            <!-- QUIZ SECTION -->
+            <div id="quiz-section" class="mt-3">
+
+                <h5 id="question" class="mb-4"></h5>
+
+                <div id="options" class="list-group mb-4"></div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <button id="prevBtn" class="btn btn-outline-secondary">
+                        Previous
+                    </button>
+
+                    <button id="nextBtn" class="btn btn-primary">
+                        Next
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- RESULT SECTION -->
+            <div id="result-section" class="text-center d-none mt-4">
                 <h4 class="mb-3">Quiz Completed 🎉</h4>
-                <p id="finalResult" class="fs-5 fw-semibold"></p>
-                <button id="restartBtn" class="btn btn-success">Restart Quiz</button>
+                <p id="finalResult" class="fs-5 fw-semibold mb-4"></p>
+                <button id="restartBtn" class="btn btn-success">
+                    Restart Quiz
+                </button>
             </div>
 
         </div>
@@ -52,59 +84,65 @@
 $(document).ready(function () {
 
     const username = localStorage.getItem("username");
+
+    if (!username) {
+        window.location.href = "index.html";
+    }
+
     $("#displayName").text(username);
 
     const questions = [
         {
             question: "Who is the Formula 1 driver known as 'Mad Max'?",
-            options: [
-                "Lewis Hamilton",
-                "Max Verstappen",
-                "Sebastian Vettel"
-            ],
+            options: ["Lewis Hamilton", "Max Verstappen", "Sebastian Vettel"],
             answer: 1
         },
         {
             question: "If a Formula 1 car completes 5 laps and each lap is 6 km, what is the total distance covered?",
-            options: [
-                "30 km",
-                "25 km",
-                "20 km"
-            ],
+            options: ["30 km", "25 km", "20 km"],
             answer: 0
         },
         {
             question: "Max Verstappen wins 3 races and earns 25 points each. How many points does he score?",
-            options: [
-                "50",
-                "75",
-                "100"
-            ],
+            options: ["50", "75", "100"],
             answer: 1
         },
         {
             question: "If a car’s speed is 300 km/h, how far will it travel in 2 hours?",
-            options: [
-                "600 km",
-                "300 km",
-                "150 km"
-            ],
+            options: ["600 km", "300 km", "150 km"],
             answer: 0
         },
         {
-            question: "A Formula 1 car gains an extra 18 km/h using DRS on a straight. Without DRS, it takes 30 seconds to cover the straight. Assuming constant speed, how many seconds does the car save by using DRS?",
-            options: [
-                "1.5 seconds",
-                "2 seconds",
-                "3 seconds"
-            ],
+            question: "A Formula 1 car gains 18 km/h using DRS. Without DRS, it takes 30 seconds. How many seconds saved?",
+            options: ["1.5 seconds", "2 seconds", "3 seconds"],
             answer: 0
         }
-
     ];
 
     let index = 0;
     let answers = [];
+    let timeLeft = 60;
+    let timerInterval;
+
+    function startTimer() {
+        timerInterval = setInterval(function () {
+
+            timeLeft--;
+            $("#timer").text(timeLeft);
+
+            if (timeLeft <= 10) {
+                $("#timer")
+                    .removeClass("text-success")
+                    .addClass("text-danger");
+            }
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                showResult();
+            }
+
+        }, 1000);
+    }
 
     function loadQuestion(i) {
         $("#question").text(questions[i].question);
@@ -114,7 +152,10 @@ $(document).ready(function () {
             const checked = answers[i] === j ? "checked" : "";
             $("#options").append(`
                 <label class="list-group-item">
-                    <input type="radio" class="form-check-input me-2" name="option" value="${j}" ${checked}>
+                    <input type="radio"
+                           class="form-check-input me-2"
+                           name="option"
+                           value="${j}" ${checked}>
                     ${option}
                 </label>
             `);
@@ -122,7 +163,9 @@ $(document).ready(function () {
     }
 
     $("#nextBtn").click(function () {
+
         const selected = $("input[name='option']:checked").val();
+
         if (selected === undefined) {
             alert("Please select an answer");
             return;
@@ -136,6 +179,7 @@ $(document).ready(function () {
         } else {
             showResult();
         }
+
     });
 
     $("#prevBtn").click(function () {
@@ -146,9 +190,15 @@ $(document).ready(function () {
     });
 
     function showResult() {
+
+        clearInterval(timerInterval);
+
         let score = 0;
+
         for (let i = 0; i < questions.length; i++) {
-            if (answers[i] === questions[i].answer) score++;
+            if (answers[i] === questions[i].answer) {
+                score++;
+            }
         }
 
         $("#quiz-section").addClass("d-none");
@@ -165,7 +215,10 @@ $(document).ready(function () {
     });
 
     loadQuestion(index);
+    startTimer();
+
 });
 </script>
+
 </body>
 </html>
