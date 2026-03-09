@@ -14,26 +14,21 @@
     </style>
 </head>
 <body class="d-flex justify-content-center align-items-center vh-100 bg-light">
-
 <div class="calculator shadow-lg">
     <div id="display" class="display">0</div>
-    
     <div class="row g-2">
         <div class="col-3"><button class="btn btn-secondary w-100 btn-calc" onclick="clearDisplay()">C</button></div>
         <div class="col-3"><button class="btn btn-secondary w-100 btn-calc" onclick="appendToDisplay('/')">/</button></div>
         <div class="col-3"><button class="btn btn-secondary w-100 btn-calc" onclick="appendToDisplay('*')">*</button></div>
         <div class="col-3"><button class="btn btn-danger w-100 btn-calc" onclick="backspace()">←</button></div>
-        
         <div class="col-3"><button class="btn btn-dark w-100 btn-calc" onclick="appendToDisplay('7')">7</button></div>
         <div class="col-3"><button class="btn btn-dark w-100 btn-calc" onclick="appendToDisplay('8')">8</button></div>
         <div class="col-3"><button class="btn btn-dark w-100 btn-calc" onclick="appendToDisplay('9')">9</button></div>
         <div class="col-3"><button class="btn btn-op w-100 btn-calc" onclick="appendToDisplay('-')">-</button></div>
-
         <div class="col-3"><button class="btn btn-dark w-100 btn-calc" onclick="appendToDisplay('4')">4</button></div>
         <div class="col-3"><button class="btn btn-dark w-100 btn-calc" onclick="appendToDisplay('5')">5</button></div>
         <div class="col-3"><button class="btn btn-dark w-100 btn-calc" onclick="appendToDisplay('6')">6</button></div>
         <div class="col-3"><button class="btn btn-op w-100 btn-calc" onclick="appendToDisplay('+')">+</button></div>
-
         <div class="col-3"><button class="btn btn-dark w-100 btn-calc" onclick="appendToDisplay('1')">1</button></div>
         <div class="col-3"><button class="btn btn-dark w-100 btn-calc" onclick="appendToDisplay('2')">2</button></div>
         <div class="col-3"><button class="btn btn-dark w-100 btn-calc" onclick="appendToDisplay('3')">3</button></div>
@@ -41,7 +36,6 @@
         <div class="col-3"><button class="btn btn-success w-100 btn-calc" onclick="sendToNode()">=</button></div>
     </div>
 </div>
-
 <script src="script.js"></script>
 </body>
 </html>

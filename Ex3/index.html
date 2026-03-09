@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>KCET Learning | Start Quiz</title>
@@ -10,7 +11,8 @@
         body {
             background: linear-gradient(135deg, #eef2ff, #f8fafc);
             min-height: 100vh;
-            padding: 60px 15px; /* space around page */
+            padding: 60px 15px;
+            /* space around page */
             font-size: 20px;
         }
 
@@ -18,52 +20,54 @@
             max-width: 420px;
             margin: auto;
             padding: 15px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
             border-radius: 15px;
         }
     </style>
 </head>
+
 <body>
 
-<div class="container">
-    <div class="card">
-        <div class="card-body p-5">
+    <div class="container">
+        <div class="card">
+            <div class="card-body p-5">
 
-            <h3 class="text-center text-primary mb-4">
-                KCET Learning Quiz
-            </h3>
+                <h3 class="text-center text-primary mb-4">
+                    KCET Learning Quiz
+                </h3>
 
-            <div class="mb-4">
-                <label class="form-label">Enter Your Name</label>
-                <input type="text" id="username" class="form-control" placeholder="Your name">
+                <div class="mb-4">
+                    <label class="form-label">Enter Your Name</label>
+                    <input type="text" id="username" class="form-control" placeholder="Your name">
+                </div>
+
+                <button id="startQuiz" class="btn btn-primary w-100">
+                    Start Quiz
+                </button>
+
             </div>
-
-            <button id="startQuiz" class="btn btn-primary w-100">
-                Start Quiz
-            </button>
-
         </div>
     </div>
-</div>
 
-<script>
-$(document).ready(function () {
+    <script>
+        $(document).ready(function () {
 
-    $("#startQuiz").click(function () {
+            $("#startQuiz").click(function () {
 
-        const name = $("#username").val().trim();
+                const name = $("#username").val().trim();
 
-        if (name === "") {
-            alert("Please enter your name");
-            return;
-        }
+                if (name === "") {
+                    alert("Please enter your name");
+                    return;
+                }
 
-        localStorage.setItem("username", name);
-        window.location.href = "quiz.html";
-    });
+                localStorage.setItem("username", name);
+                window.location.href = "quiz.html";
+            });
 
-});
-</script>
+        });
+    </script>
 
 </body>
+
 </html>
